@@ -1,0 +1,66 @@
+.disableSelection {
+    user-select:none;
+}
+
+.fill {
+    width: 100%;
+    height: 100%;
+}
+
+.borderless {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.hiddenScreen {
+    display: none;
+}
+
+.visibleScreen {
+    display: block;
+}
+
+#menuScreen {
+    background-color: red;
+}
+
+#gameScreen {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    background-color: orange;
+}
+
+#gameScreen > #controls {
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+    background-color: blue;
+
+    height: 100px;
+}
+
+#map-outer {
+    grid-column: 1 / span 1;
+    grid-row: 2 / span 1;
+    background-color: green;
+}
+
+#map {
+    position: relative;
+    overflow: scroll;
+}
+
+.spot {
+}
+
+.highlightInvisible {
+    display: none;
+}
+
+.highlightVisible {
+    display: block;
+    border: 2px solid yellow;
+    z-index: 10;
+    box-sizing: border-box; 
+}
