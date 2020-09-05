@@ -1,5 +1,5 @@
-import {Point} from "./modules/point.js";
-import {Spot} from "./modules/spot.js";
+import {Point} from "./point.js";
+import {Spot} from "./spot.js";
 
 class GameMapView {
     ViewElement;

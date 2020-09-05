@@ -1,4 +1,4 @@
-import {Point} from "./modules/point.js";
+import {Point} from "./point.js";
 
 class GameMapViewControlModeTest {
     PrimarySelect(view, point) {

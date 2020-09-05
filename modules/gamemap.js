@@ -1,6 +1,6 @@
-import {FillArray} from "./modules/util.js";
-import {Point} from "./modules/point.js";
-import {Spot} from "./modules/spot.js";
+import {FillArray} from "./util.js";
+import {Point} from "./point.js";
+import {Spot} from "./spot.js";
 
 class GameMap {
     m_points = null;
@@ -90,7 +90,7 @@ class GameMap {
             indexX => FillArray(oldPoints.length, indexY => Spot.Empty));
         for (let y = 0; y < oldPoints.length; ++y) {
             for (let x = 0; x < oldPoints[y].length; ++x) {
-                this.m_points[x][y] = oldPoints[y][x];
+                this.m_points[x][y] = oldPoints[oldPoints.length - y - 1][x];
             }
         }
     }

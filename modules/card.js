@@ -1,5 +1,5 @@
-import {Point} from "./modules/point.js";
-import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece} from "./modules/gameviewmapcontrolmode.js";
+import {Point} from "./point.js";
+import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece} from "./gamemapviewcontrolmode.js";
 
 class PlacePieceCard {
     m_gameMapView;

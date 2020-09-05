@@ -3,7 +3,7 @@ import {NameToUriMap} from "./modules/nametourimap.js";
 import {Point} from "./modules/point.js";
 import {Spot} from "./modules/spot.js";
 import {GameMap} from "./modules/gamemap.js";
-import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece} from "./modules/gameviewmapcontrolmode.js";
+import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece} from "./modules/gamemapviewcontrolmode.js";
 import {PlacePieceCard} from "./modules/card.js";
 import {GameMapView} from "./modules/gamemapview.js";
 
