@@ -44,6 +44,38 @@ class GameMapView {
         this._highlightDiv.style.height = spotSize + "px";
         this._highlightDiv.style.position = "absolute";
         this.ViewElement.appendChild(this._highlightDiv);
+        document.body.addEventListener("keydown", this._KeyDown.bind(this));
+    }
+
+    _KeyDown(eventArgs) {
+        let direction;
+        switch (eventArgs.keyCode) {
+            case 38:
+                direction = Point.North;
+                break;
+            case 37:
+                direction = Point.West;
+                break;
+            case 39:
+                direction = Point.East;
+                break;
+            case 40:
+                direction = Point.South;
+                break;
+            case 32:
+                if (this._GetControlMode()) {
+                    this._GetControlMode().PrimarySelect(this, null);
+                }
+                break;
+            case 90:
+                if (this._GetControlMode()) {
+                    this._GetControlMode().SecondarySelect(this, null);
+                }
+                break;
+        }
+        if (direction) {
+            this._Move(direction);
+        }
     }
 
     SetGameMap(gameMap) {
@@ -86,20 +118,24 @@ class GameMapView {
         }
     }
 
-    _PointToId(point) { return this._prefix + "_" + point.X + "_" + point.Y; }
+    _PointToId(point, kind) { 
+        kind = kind || "p";
+        return this._prefix + "_" + kind + "_" + point.X + "_" + point.Y;
+    }
+
     _IdToPoint(id) {
         const parts = id.split("_");
         if (parts[0] != this._prefix) {
             throw new Error("Trying to parse spot ID from different view...");
         }
-        return new Point(parseInt(parts[1]), parseInt(parts[2]));
+        return new Point(parseInt(parts[2]), parseInt(parts[3]));
     }
 
-    _UpdatePoint(point) {
-        let spotElement = document.getElementById(this._PointToId(point));
+    _GetOrCreateElement(id) {
+        let spotElement = document.getElementById(id);
         if (!spotElement) {
             spotElement = document.createElement("img");
-            spotElement.setAttribute("id", this._PointToId(point));
+            spotElement.setAttribute("id", id);
             spotElement.classList.add("borderless");
             spotElement.classList.add("spot");
 
@@ -107,8 +143,6 @@ class GameMapView {
             spotElement.style.width = spotSize + "px";
             spotElement.style.height = spotSize + "px";
             spotElement.style.position = "absolute";
-            spotElement.style.left = spotSize * point.X;
-            spotElement.style.top = spotSize * point.Y;
 
             spotElement.addEventListener("mouseout", this._SpotMouseOut.bind(this));
             spotElement.addEventListener("mouseover", this._SpotMouseOver.bind(this));
@@ -117,6 +151,19 @@ class GameMapView {
 
             this.ViewElement.appendChild(spotElement);
         }
+    }
+
+    _UpdateCharacter(character) {
+        const spotSize = 32;
+        let spotElement = this._GetOrCreateElement(this._PointToId(point));
+
+    }
+
+    _UpdatePoint(point) {
+        const spotSize = 32;
+        let spotElement = this._GetOrCreateElement(this._PointToId(point));
+        spotElement.style.left = spotSize * point.X;
+        spotElement.style.top = spotSize * point.Y;
 
         let spot = Spot.Empty;
         if (this.GameMapOverlay) {
@@ -161,6 +208,12 @@ class GameMapView {
             if (this._GetControlMode().SecondarySelect(this, point)) {
                 eventArgs.preventDefault();
             }
+        }
+    }
+
+    _Move(direction) {
+        if (this._GetControlMode()) {
+            this._GetControlMode().Move(this, direction);
         }
     }
 }

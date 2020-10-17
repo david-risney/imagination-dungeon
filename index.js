@@ -6,48 +6,84 @@ import {GameMap} from "./modules/gamemap.js";
 import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece} from "./modules/gamemapviewcontrolmode.js";
 import {PlacePieceCard} from "./modules/card.js";
 import {GameMapView} from "./modules/gamemapview.js";
+// import {Character} from "./modules/character.js";
 
 const nameToUriMap = new NameToUriMap({
     "floor": "floor.svg",
     "wall": "wall.svg",
     "empty": "empty.svg",
 });
-const gameMap = new GameMap(new Point(30, 30));
-gameMap.SetMapAt(new Point(12, 12), new GameMap([
-    "11011",
-    "10001",
-    "00000",
-    "10001",
-    "11011",
+const tileSize = 7;
+const gameMap = new GameMap(
+    new Point(tileSize * 6, tileSize * 4), undefined, new Point(3, 3));
+gameMap.SetMapAt(new Point(tileSize * 0, tileSize * 0), new GameMap([
+    "1111111",
+    "1000001",
+    "1000000",
+    "1000000",
+    "1000000",
+    "1000001",
+    "1100011",
     ], [Spot.Floor, Spot.Wall]));
+gameMap.SetMapAt(new Point(tileSize * 5, tileSize * 3), new GameMap([
+    "1100011",
+    "1000001",
+    "0000001",
+    "0000001",
+    "0000001",
+    "1000001",
+    "1111111",
+    ], [Spot.Floor, Spot.Wall]));
+
 const gameMapView = new GameMapView(nameToUriMap, document.getElementById("map"));
 gameMapView.SetGameMap(gameMap);
 gameMapView.PushControlMode(new GameMapViewControlModeTest());
 
 let cards = [
     new PlacePieceCard(gameMapView, new GameMap([
-        "11111",
-        "00000",
-        "11111",
+        "       ",
+        "1111111",
+        "0000000",
+        "0000000",
+        "0000000",
+        "1111111",
+        "       ",
     ], [Spot.Floor, Spot.Wall])),
     new PlacePieceCard(gameMapView, new GameMap([
-        " 101",
-        "1101",
-        "0001",
-        "1111",
+        "1100011",
+        "1000001",
+        "0000001",
+        "0000001",
+        "0000001",
+        "1000001",
+        "1111111",
     ], [Spot.Floor, Spot.Wall])),
     new PlacePieceCard(gameMapView, new GameMap([
-        " 101 ",
-        "11011",
-        "00000",
-        "11111",
+        "0000001",
+        "0000001",
+        "0000001",
+        "0000001",
+        "0000001",
+        "0000001",
+        "1111111",
     ], [Spot.Floor, Spot.Wall])),
     new PlacePieceCard(gameMapView, new GameMap([
-        "11011",
-        "10001",
-        "00000",
-        "10001",
-        "11011",
+        " 10001 ",
+        "1100011",
+        "0000000",
+        "0000000",
+        "0000000",
+        "1111111",
+        "       ",
+    ], [Spot.Floor, Spot.Wall])),
+    new PlacePieceCard(gameMapView, new GameMap([
+        "1100011",
+        "1000001",
+        "0000000",
+        "0000000",
+        "0000000",
+        "1000001",
+        "1100011",
     ], [Spot.Floor, Spot.Wall])),
 ];
 

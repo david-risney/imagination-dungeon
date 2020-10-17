@@ -16,10 +16,20 @@ class GameMapViewControlModeTest {
 
     ClearHover(view, point) {
     }
+
+    Move(view, direction) {
+    }
 }
 
 class GameMapViewControlModePlacePiece {
+    m_point;
+
+    constructor() {
+        this.m_point = new Point(0, 0);
+    }
+
     PrimarySelect(view, point) {
+        point = point || this.m_point;
         if (view.GameMap.SetMapAt(view._gameMapOverlayOffset, view.GameMapOverlay)) {
             view.PopControlMode();
         }
@@ -27,9 +37,13 @@ class GameMapViewControlModePlacePiece {
     }
 
     SecondarySelect(view, point) {
+        point = point || this.m_point;
         view.GameMapOverlay.Rotate();
-        const half = view.GameMapOverlay.GetMax().Scale(0.5, true);
-        view.SetGameMapOverlayOffset(point.Add(half.Negate()));
+        const max = view.GameMapOverlay.GetMax();
+        const half = max.Scale(0.5, true);
+        const offsetPoint = point.Add(half.Negate());
+        let roundedPoint = offsetPoint.RoundTo(max.X);
+        view.SetGameMapOverlayOffset(roundedPoint);
         // view.PopControlMode();
         // view.GameMapOverlay = null;
         // view.SetGameMapOverlayOffset(new Point(0, 0));
@@ -37,11 +51,25 @@ class GameMapViewControlModePlacePiece {
     }
 
     Hover(view, point) {
-        const half = view.GameMapOverlay.GetMax().Scale(0.5, true);
-        view.SetGameMapOverlayOffset(point.Add(half.Negate()));
+        this.m_point = point;
+        this._MoveView(view, point);
+    }
+
+    _MoveView(view, point) {
+        const max = view.GameMapOverlay.GetMax();
+        const half = max.Scale(0.5, true);
+        const offsetPoint = point.Add(half.Negate());
+        const roundedPoint = offsetPoint.RoundTo(max.X);
+
+        view.SetGameMapOverlayOffset(roundedPoint);
     }
 
     ClearHover(view, point) {
+    }
+
+    Move(view, direction) {
+        this.m_point = this.m_point.Add(direction.Scale(view.GameMapOverlay.GetMax().X));
+        this._MoveView(view, this.m_point);
     }
 }
 

@@ -4,12 +4,15 @@ import {Spot} from "./spot.js";
 
 class GameMap {
     m_points = null;
+    m_startPoint = null;
+    m_characters = [];
 
     m_eventTarget = new EventTarget();
 
-    constructor(mapTextArrOrSize, spotKinds) {
+    constructor(mapTextArrOrSize, spotKinds, startPoint) {
         this.addEventListener = this.m_eventTarget.addEventListener.bind(this.m_eventTarget);
         this.removeEventListener = this.m_eventTarget.removeEventListener.bind(this.m_eventTarget);
+        this.m_startPoint = startPoint || new Point(0, 0);
 
         if (mapTextArrOrSize.X !== undefined) {
             let mapSize = mapTextArrOrSize;
@@ -27,6 +30,15 @@ class GameMap {
                 }
             }
         }
+    }
+
+    AddCharacter(character) {
+        character.SetLocation(this.m_startPoint);
+        this.m_characters.push(character);
+    }
+
+    GetCharacters() {
+        return this.m_characters;
     }
 
     Clone() {
