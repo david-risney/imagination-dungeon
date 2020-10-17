@@ -3,15 +3,17 @@ import {NameToUriMap} from "./modules/nametourimap.js";
 import {Point} from "./modules/point.js";
 import {Spot} from "./modules/spot.js";
 import {GameMap} from "./modules/gamemap.js";
-import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece} from "./modules/gamemapviewcontrolmode.js";
-import {PlacePieceCard} from "./modules/card.js";
+import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece, GameMapViewControlModeMoveCharacter} from "./modules/gamemapviewcontrolmode.js";
+import {PlacePieceCard, MoveCard} from "./modules/card.js";
 import {GameMapView} from "./modules/gamemapview.js";
-// import {Character} from "./modules/character.js";
+import {Character} from "./modules/character.js";
 
 const nameToUriMap = new NameToUriMap({
     "floor": "floor.svg",
     "wall": "wall.svg",
     "empty": "empty.svg",
+    "blue": "blue-circle.svg",
+    "red": "red-circle.svg",
 });
 const tileSize = 7;
 const gameMap = new GameMap(
@@ -34,12 +36,15 @@ gameMap.SetMapAt(new Point(tileSize * 5, tileSize * 3), new GameMap([
     "1000001",
     "1111111",
     ], [Spot.Floor, Spot.Wall]));
+gameMap.AddCharacter(new Character(gameMap, "blue"));
+gameMap.AddCharacter(new Character(gameMap, "red"));
 
 const gameMapView = new GameMapView(nameToUriMap, document.getElementById("map"));
 gameMapView.SetGameMap(gameMap);
 gameMapView.PushControlMode(new GameMapViewControlModeTest());
 
 let cards = [
+    new MoveCard(gameMapView, gameMap.GetCharacters()[0]),
     new PlacePieceCard(gameMapView, new GameMap([
         "       ",
         "1111111",
@@ -89,4 +94,7 @@ let cards = [
 
 document.getElementById("TestPlacePiece").addEventListener("click", () => {
     RandomArray(cards).Invoke();
+});
+document.getElementById("TestMove").addEventListener("click", () => {
+    cards[0].Invoke();
 });

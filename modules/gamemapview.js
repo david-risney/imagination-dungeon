@@ -30,6 +30,7 @@ class GameMapView {
     SetGameMapOverlayOffset(offset) {
         this._gameMapOverlayOffset = offset;
         this._UpdateAllPoints();
+        this._UpdateAllCharacters();
     }
 
     constructor(nameToUriMap, viewElement) {
@@ -88,6 +89,7 @@ class GameMapView {
             if (this.GameMap) {
                 this.GameMap.addEventListener("changed", this._GameMapChanged.bind(this));
                 this._UpdateAllPoints();
+                this._UpdateAllCharacters();
             }
         }
     }
@@ -118,6 +120,10 @@ class GameMapView {
         }
     }
 
+    _UpdateAllCharacters() {
+        this.GameMap.GetCharacters().forEach(character => this._UpdateCharacter(character));
+    }
+
     _PointToId(point, kind) { 
         kind = kind || "p";
         return this._prefix + "_" + kind + "_" + point.X + "_" + point.Y;
@@ -128,16 +134,43 @@ class GameMapView {
         if (parts[0] != this._prefix) {
             throw new Error("Trying to parse spot ID from different view...");
         }
-        return new Point(parseInt(parts[2]), parseInt(parts[3]));
+        if (parts[1] == "p") {
+            return new Point(parseInt(parts[2]), parseInt(parts[3]));
+        }
+        else if (parts[1] == "c") {
+            return this._IdToCharacter(id).m_location;
+        }
+        else {
+            throw new Error("Trying to parse non-point ID as point ID");
+        }
     }
 
-    _GetOrCreateElement(id) {
+    _IdToCharacter(id) {
+        const parts = id.split("_");
+        if (parts[0] != this._prefix) {
+            throw new Error("Trying to parse spot ID from different view...");
+        }
+        if (parts[1] != "c") {
+            throw new Error("Trying to parse non-character ID as character ID");
+        }
+
+        return this.GameMap.GetCharacters().filter(c => c.m_id == parts[2])[0]
+    }
+
+    _CharacterToId(character) {
+        return this._prefix + "_" + "c" + "_" + character.m_id;
+    }
+
+    _GetOrCreateElement(id, isCharacter) {
         let spotElement = document.getElementById(id);
         if (!spotElement) {
             spotElement = document.createElement("img");
             spotElement.setAttribute("id", id);
             spotElement.classList.add("borderless");
             spotElement.classList.add("spot");
+            if (isCharacter) {
+                spotElement.classList.add("character");
+            }
 
             const spotSize = 32;
             spotElement.style.width = spotSize + "px";
@@ -151,12 +184,19 @@ class GameMapView {
 
             this.ViewElement.appendChild(spotElement);
         }
+        return spotElement;
     }
 
     _UpdateCharacter(character) {
         const spotSize = 32;
-        let spotElement = this._GetOrCreateElement(this._PointToId(point));
+        let spotElement = this._GetOrCreateElement(this._CharacterToId(character));
+        spotElement.style.left = spotSize * character.m_location.X;
+        spotElement.style.top = spotSize * character.m_location.Y;
 
+        const uri = this._nameToUriMap.Map(character.m_imageName);
+        if (spotElement.getAttribute("src") != uri) {
+            spotElement.setAttribute("src", uri);
+        }
     }
 
     _UpdatePoint(point) {

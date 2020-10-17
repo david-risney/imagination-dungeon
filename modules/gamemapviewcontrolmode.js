@@ -73,4 +73,49 @@ class GameMapViewControlModePlacePiece {
     }
 }
 
-export {GameMapViewControlModeTest, GameMapViewControlModePlacePiece};
+class GameMapViewControlModeMoveCharacter {
+    m_point;
+    m_character;
+    m_movementPoints = 0;
+
+    constructor(character) {
+        this.m_point = new Point(0, 0);
+        this.m_character = character;
+        this.m_movementPoints = this.m_character.GetCharacteristic("move");
+    }
+
+    PrimarySelect(view, point) {
+        point = point || this.m_point;
+        this._MoveCharacter(view, point);
+        return true;
+    }
+
+    SecondarySelect(view, point) {
+        return true;
+    }
+
+    Hover(view, point) {
+    }
+
+    ClearHover(view, point) {
+    }
+
+    Move(view, direction) {
+        var point = this.m_character.m_location.Add(direction);
+        this._MoveCharacter(view, point);
+    }
+
+    _MoveCharacter(view, point) {
+        if (this.m_character.CanMoveTo(point)) {
+            this.m_character.MoveTo(point);
+            --this.m_movementPoints;
+            view._UpdateAllCharacters();
+        }
+        if (this.m_movementPoints == 0) {
+            view.PopControlMode();
+        }
+
+    }
+}
+
+export {GameMapViewControlModeTest, GameMapViewControlModePlacePiece, GameMapViewControlModeMoveCharacter};

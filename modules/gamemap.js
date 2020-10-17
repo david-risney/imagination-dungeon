@@ -1,6 +1,7 @@
 import {FillArray} from "./util.js";
 import {Point} from "./point.js";
 import {Spot} from "./spot.js";
+import {Character} from "./character.js";
 
 class GameMap {
     m_points = null;

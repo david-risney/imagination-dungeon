@@ -1,5 +1,5 @@
 import {Point} from "./point.js";
-import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece} from "./gamemapviewcontrolmode.js";
+import {GameMapViewControlModeTest, GameMapViewControlModePlacePiece, GameMapViewControlModeMoveCharacter} from "./gamemapviewcontrolmode.js";
 
 class PlacePieceCard {
     m_gameMapView;
@@ -21,4 +21,22 @@ class PlacePieceCard {
     }
 }
 
-export {PlacePieceCard};
+class MoveCard {
+    m_gameMapView;
+    m_character;
+
+    constructor(view, character) {
+        this.m_gameMapView = view;
+        this.m_character = character;
+    }
+
+    Invoke() {
+        this.m_gameMapView.PushControlMode(new GameMapViewControlModeMoveCharacter(this.m_character));
+    }
+
+    Clone() {
+        return new MoveCard(this.m_gameMapView, this.m_character);
+    }
+}
+
+export {PlacePieceCard, MoveCard};

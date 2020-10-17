@@ -21,6 +21,10 @@
     display: block;
 }
 
+.character {
+    z-index: 10;
+}
+
 #menuScreen {
     background-color: red;
 }
